@@ -1,0 +1,21 @@
+/*@import '@fortawesome/fontawesome-free/css/all.css';*/
+/** {*/
+/*    background: gold;*/
+/*}*/
+.player-button {
+    border: none;
+    background-color: #fff;
+    color: #333;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.player-button:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.player-button:active {
+    transform: scale(0.95);
+}
