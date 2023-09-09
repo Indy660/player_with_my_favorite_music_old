@@ -1,4 +1,4 @@
-import { audioPlayer } from './consts.js'
+import { audioPlayer, progressRange } from './consts.js'
 import './scripts/set-volume.js'
 import './scripts/set-progress-range.js'
 
@@ -50,6 +50,8 @@ function loadTrack(track) {
 function playTrack(track) {
   console.log('playTrack' , track)
   loadTrack(track);
+  // TODO: не работает при переключении музыки
+  // progressRange.value = 0
   if (isPlaying) {
     audioPlayer.play();
   }
