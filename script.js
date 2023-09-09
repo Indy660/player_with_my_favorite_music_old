@@ -1,5 +1,6 @@
 import { audioPlayer } from './consts.js'
-import './scripts/get-volume.js'
+import './scripts/set-volume.js'
+import './scripts/set-progress-range.js'
 
 // const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPauseBtn');
@@ -17,6 +18,7 @@ previousBtn.addEventListener('click', previousTrack);
 nextBtn.addEventListener('click', nextTrack);
 
 function togglePlayPause() {
+  console.log('togglePlayPause')
   isPlaying = !isPlaying;
   if (isPlaying) {
     playPauseBtn.classList.add('playing');
@@ -33,41 +35,25 @@ function nextTrack() {
   if (currentTrackIndex >= tracks.length) {
     currentTrackIndex = 0;
   }
-  loadTrackAndPlay(tracks[currentTrackIndex]);
+  playTrack(tracks[currentTrackIndex]);
 }
 
 function previousTrack() {
+  console.log('previousTrack')
   currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-  loadTrackAndPlay(tracks[currentTrackIndex]);
+  playTrack(tracks[currentTrackIndex]);
 }
 
 function loadTrack(track) {
   audioPlayer.src = musicFolderPath + track;
 }
 
-function loadTrackAndPlay(track) {
+function playTrack(track) {
+  console.log('playTrack' , track)
   loadTrack(track);
   if (isPlaying) {
     audioPlayer.play();
   }
-}
-
-const progressRange = document.getElementById('progressRange');
-let isSeeking = false;
-
-audioPlayer.addEventListener('timeupdate', updateProgress);
-progressRange.addEventListener('input', seekAudio);
-progressRange.addEventListener('mousedown', () => (isSeeking = true));
-progressRange.addEventListener('mouseup', () => (isSeeking = false));
-
-function updateProgress() {
-  if (!isSeeking) {
-    progressRange.value =  (audioPlayer.currentTime / audioPlayer.duration) * 100;
-  }
-}
-
-function seekAudio() {
-  audioPlayer.currentTime = (progressRange.value / 100) * audioPlayer.duration;
 }
 
 loadTrack(tracks[currentTrackIndex]);
