@@ -1,4 +1,7 @@
-const audioPlayer = document.getElementById('audioPlayer');
+import { audioPlayer } from './consts.js'
+import './scripts/get-volume.js'
+
+// const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
 const nextBtn = document.getElementById('nextBtn');
@@ -49,10 +52,22 @@ function loadTrackAndPlay(track) {
   }
 }
 
-const volumeRange = document.getElementById('volumeRange');
-volumeRange.addEventListener('input', setVolume);
-function setVolume() {
-  audioPlayer.volume = volumeRange.value / 100;
+const progressRange = document.getElementById('progressRange');
+let isSeeking = false;
+
+audioPlayer.addEventListener('timeupdate', updateProgress);
+progressRange.addEventListener('input', seekAudio);
+progressRange.addEventListener('mousedown', () => (isSeeking = true));
+progressRange.addEventListener('mouseup', () => (isSeeking = false));
+
+function updateProgress() {
+  if (!isSeeking) {
+    progressRange.value =  (audioPlayer.currentTime / audioPlayer.duration) * 100;
+  }
+}
+
+function seekAudio() {
+  audioPlayer.currentTime = (progressRange.value / 100) * audioPlayer.duration;
 }
 
 loadTrack(tracks[currentTrackIndex]);

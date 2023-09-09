@@ -18,11 +18,14 @@
             <input type="range" id="volumeRange" min="0" max="100" value="80" step="1">
         </div>
     </div>
+    <div class="progress-control">
+        <input type="range" id="progressRange" min="0" max="100" value="0">
+    </div>
     <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
     <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
     <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
     <audio id="audioPlayer"></audio>
 </div>
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
