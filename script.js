@@ -7,8 +7,7 @@ const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
 const nextBtn = document.getElementById('nextBtn');
 
-const musicFolderPath = './music/';
-const tracks = ['As I Lay Dying - Forever.mp3', 'As I Lay Dying - The Sound Оf Truth.mp3'];
+const tracks =  Object.keys(import.meta.glob('/music/*.mp3'));
 
 let currentTrackIndex = 0;
 let isPlaying = false;
@@ -45,7 +44,7 @@ function previousTrack() {
 }
 
 function loadTrack(track) {
-  audioPlayer.src = musicFolderPath + track;
+  audioPlayer.src = track;
 }
 
 function playTrack(track) {
