@@ -1,35 +1,27 @@
-// const gamma = require('./music');
-// console.log(gamma)
-
-const fs = require('fs');
-console.log(fs)
-
 const audioPlayer = document.getElementById('audioPlayer');
-const playBtn = document.getElementById('playBtn');
-const stopBtn = document.getElementById('stopBtn');
-const nextBtn = document.getElementById('nextBtn');
+const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
+const nextBtn = document.getElementById('nextBtn');
 
 const musicFolderPath = './music/';
-const tracks = ['As I Lay Dying - Forever.mp3'];
-// const tracks = folderWithMusic
-console.log(tracks)
+const tracks = ['As I Lay Dying - Forever.mp3', 'As I Lay Dying - The Sound Оf Truth.mp3'];
+
 let currentTrackIndex = 0;
+let isPlaying = false;
 
-playBtn.addEventListener('click', play);
-stopBtn.addEventListener('click', stop);
-nextBtn.addEventListener('click', nextTrack);
+playPauseBtn.addEventListener('click', togglePlayPause);
 previousBtn.addEventListener('click', previousTrack);
+nextBtn.addEventListener('click', nextTrack);
 
-function play() {
-  console.log('play')
-  audioPlayer.play();
-}
-
-function stop() {
-  console.log('stop')
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
+function togglePlayPause() {
+  isPlaying = !isPlaying;
+  if (isPlaying) {
+    playPauseBtn.classList.add('playing');
+    audioPlayer.play();
+  } else {
+    playPauseBtn.classList.remove('playing');
+    audioPlayer.pause();
+  }
 }
 
 function nextTrack() {
@@ -38,20 +30,29 @@ function nextTrack() {
   if (currentTrackIndex >= tracks.length) {
     currentTrackIndex = 0;
   }
-  loadTrack(tracks[currentTrackIndex]);
+  loadTrackAndPlay(tracks[currentTrackIndex]);
 }
 
 function previousTrack() {
-  console.log('previousTrack')
-  currentTrackIndex -= 1;
-  if (currentTrackIndex < 0) {
-    currentTrackIndex = tracks.length - 1;
-  }
-  loadTrack(tracks[currentTrackIndex]);
+  currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+  loadTrackAndPlay(tracks[currentTrackIndex]);
 }
 
 function loadTrack(track) {
-  console.log('loadTrack', track)
   audioPlayer.src = musicFolderPath + track;
-  play();
 }
+
+function loadTrackAndPlay(track) {
+  loadTrack(track);
+  if (isPlaying) {
+    audioPlayer.play();
+  }
+}
+
+const volumeRange = document.getElementById('volumeRange');
+volumeRange.addEventListener('input', setVolume);
+function setVolume() {
+  audioPlayer.volume = volumeRange.value / 100;
+}
+
+loadTrack(tracks[currentTrackIndex]);
