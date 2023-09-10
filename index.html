@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 <!--    <script src="script.js"></script>-->
@@ -10,32 +11,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <img id="logoImage" src="./images/default_logo.png" class="album-image" alt=""/>
-    <div class="volume-control">
-        <button id="volumeDownBtn" class="player-button"><i class="fas  fa-volume-up"></i></button>
-        <input class="volume-slider" type="range" id="volumeRange" min="0" max="100" value="80" step="1">
-    </div>
-    <div class="progress-control">
-        <input type="range" id="progressRange" min="0" max="100" value="0" step="1">
-        <div class="time-display">
-            <span id="currentTime">0:00</span>
-            <span id="totalTime">0:00</span>
+    <div class="container">
+        <img id="logoImage" src="./images/default_logo.png" class="album-image" alt=""/>
+        <div class="artist-info">
+            <div id="bandName" class="band"></div>
+            <div id="songName" class="song"></div>
         </div>
-    </div>
-    <div class="main-control">
-        <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
-        <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
-        <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
-    </div>
-    <div class="other">
-        <i id="randomModeBtn" class="fa-solid fa-shuffle"></i>
-        <div class="song-display">
-            <span id="currentSongNum">1</span>/<span id="totalSongsNum"></span>
+        <div class="volume-control">
+            <button id="volumeDownBtn" class="player-button"><i class="fas  fa-volume-up"></i></button>
+            <input class="volume-control" type="range" id="volumeRange" min="0" max="100" value="80" step="1">
         </div>
+        <div class="progress-control">
+            <input type="range" id="progressRange" min="0" max="100" value="0" step="1">
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="totalTime">0:00</span>
+            </div>
+        </div>
+        <div class="main-control">
+            <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
+            <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
+            <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
+        </div>
+        <div class="other">
+            <i id="randomModeBtn" class="fa-solid fa-shuffle"></i>
+            <div class="song-display">
+                <span id="currentSongNum">1</span>/<span id="totalSongsNum"></span>
+            </div>
+        </div>
+        <audio preload="metadata" id="audioPlayer"></audio>
     </div>
-    <audio preload="metadata" id="audioPlayer"></audio>
-</div>
-<script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

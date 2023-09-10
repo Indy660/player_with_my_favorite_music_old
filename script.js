@@ -12,14 +12,16 @@ import tracks from './scripts/get-music-list.js';
 //   console.log('Новое состояние:', newState);
 // });
 
-// const audioPlayer = document.getElementById('audioPlayer');
+// main
 const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
 const nextBtn = document.getElementById('nextBtn');
 
+//other
 const currentSongNum = document.getElementById('currentSongNum');
-
 const logoImage = document.getElementById('logoImage');
+const bandName = document.getElementById('bandName');
+const songName = document.getElementById('songName');
 
 
 // const tracks =  getMusicList();
@@ -91,9 +93,20 @@ function setLogo(track) {
   logoImage.src = pathToImages + 'default_logo.png'
 }
 
+function setInfoBand(track) {
+
+
+  const indexLastSlash = track.lastIndexOf('/');
+  const fullNameSong = track.substring(indexLastSlash + 1);
+  const [band, song] = fullNameSong.split(' - ')
+  bandName.textContent = band;
+  songName.textContent = song.slice(0, song.lastIndexOf('.'));
+}
+
 function loadTrack(track) {
   audioPlayer.src = track;
   setLogo(track)
+  setInfoBand(track)
 }
 
 function playTrack(track) {
