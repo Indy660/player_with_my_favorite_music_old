@@ -29,6 +29,7 @@ let isPlaying = false;
 playPauseBtn.addEventListener('click', togglePlayPause);
 previousBtn.addEventListener('click', previousTrack);
 nextBtn.addEventListener('click', nextTrack);
+audioPlayer.addEventListener('ended', nextTrack);
 
 function togglePlayPause() {
   console.log('togglePlayPause')
