@@ -1,6 +1,7 @@
 import { audioPlayer, progressRange } from './consts.js'
 import './scripts/set-volume.js'
 import './scripts/set-progress-range.js'
+import './scripts/set-time.js'
 
 // const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPauseBtn');
@@ -52,8 +53,12 @@ function playTrack(track) {
   loadTrack(track);
   // TODO: не работает при переключении музыки
   // progressRange.value = 0
+
+  // TODO: для дебагинга на всякий
+  // console.dir(audioPlayer)
   if (isPlaying) {
     audioPlayer.play();
+
   }
 }
 

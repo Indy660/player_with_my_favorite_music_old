@@ -20,13 +20,17 @@
     </div>
     <div class="progress-control">
         <input type="range" id="progressRange" min="0" max="100" value="0" step="1">
+        <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+        </div>
     </div>
     <div class="main-control">
     <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
     <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
     <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
     </div>
-    <audio id="audioPlayer"></audio>
+    <audio preload="metadata" id="audioPlayer"></audio>
 </div>
 <script type="module" src="script.js"></script>
 </body>
