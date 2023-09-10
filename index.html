@@ -14,9 +14,7 @@
     <img id="image" src="" class="album-image" alt=""/>
     <div class="volume-control">
         <button id="volumeDownBtn" class="player-button"><i class="fas  fa-volume-up"></i></button>
-        <div class="volume-slider">
-            <input type="range" id="volumeRange" min="0" max="100" value="80" step="1">
-        </div>
+        <input class="volume-slider" type="range" id="volumeRange" min="0" max="100" value="80" step="1">
     </div>
     <div class="progress-control">
         <input type="range" id="progressRange" min="0" max="100" value="0" step="1">
@@ -26,9 +24,16 @@
         </div>
     </div>
     <div class="main-control">
-    <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
-    <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
-    <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
+        <button id="previousBtn" class="player-button"><i class="fas fa-step-backward"></i></button>
+        <button id="playPauseBtn" class="player-button"><i class="fas fa-play"></i></button>
+        <button id="nextBtn" class="player-button"><i class="fas fa-step-forward"></i></button>
+    </div>
+    <div class="other">
+        <i id="randomModeBtn" class="fa-solid fa-shuffle"></i>
+        <div class="song-display">
+            <span id="currentSong">1</span>
+            <span id="totalSongs"></span>
+        </div>
     </div>
     <audio preload="metadata" id="audioPlayer"></audio>
 </div>

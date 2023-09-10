@@ -1,15 +1,22 @@
-import { audioPlayer, progressRange } from './consts.js'
+import { audioPlayer } from './consts.js'
 import './scripts/set-volume.js'
 import './scripts/set-progress-range.js'
 import './scripts/set-time.js'
+import tracks from './scripts/random-mode.js';
+
+// import { tracks, updateStateEvent, addStateUpdateListener } from './scripts/random-mode.js';
+//
+// // Прослушивание события обновления состояния
+// addStateUpdateListener((newState) => {
+//   // Обрабатывайте обновление состояния здесь
+//   console.log('Новое состояние:', newState);
+// });
 
 // const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
 const nextBtn = document.getElementById('nextBtn');
-
-const tracks =  Object.keys(import.meta.glob('/music/*.mp3'));
-
+// const tracks =  getMusicList();
 let currentTrackIndex = 0;
 let isPlaying = false;
 
