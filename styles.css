@@ -93,12 +93,7 @@ body {
     justify-content: center;
 }
 
-.volume-control {
-    width: 100%;
-    margin: 0 10px;
-}
-
-.progress-control {
+.volume-control, .progress-control {
     width: 100%;
 }
 
