@@ -45,6 +45,9 @@
 
 
 const defaultTrackList =  Object.keys(import.meta.glob('/music/*.mp3'));
+const totalSongsSpan = document.getElementById('totalSongsNum');
+totalSongsSpan.textContent = defaultTrackList?.length || '0';
+
 const randomModeBtn = document.getElementById('randomModeBtn');
 let randomModeState = false
 

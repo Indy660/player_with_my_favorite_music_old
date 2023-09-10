@@ -2,7 +2,7 @@ import { audioPlayer } from './consts.js'
 import './scripts/set-volume.js'
 import './scripts/set-progress-range.js'
 import './scripts/set-time.js'
-import tracks from './scripts/random-mode.js';
+import tracks from './scripts/get-music-list.js';
 
 // import { tracks, updateStateEvent, addStateUpdateListener } from './scripts/random-mode.js';
 //
@@ -16,6 +16,7 @@ import tracks from './scripts/random-mode.js';
 const playPauseBtn = document.getElementById('playPauseBtn');
 const previousBtn = document.getElementById('previousBtn');
 const nextBtn = document.getElementById('nextBtn');
+const currentSongNum = document.getElementById('currentSongNum');
 // const tracks =  getMusicList();
 let currentTrackIndex = 0;
 let isPlaying = false;
@@ -63,6 +64,8 @@ function playTrack(track) {
 
   // TODO: для дебагинга на всякий
   // console.dir(audioPlayer)
+
+  currentSongNum.textContent = (currentTrackIndex + 1).toString();
   if (isPlaying) {
     audioPlayer.play();
 
