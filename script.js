@@ -2,7 +2,9 @@ import { audioPlayer } from "./consts";
 import "./scripts/set-volume";
 import "./scripts/set-progress-range";
 import "./scripts/set-time";
-import tracks from "./scripts/get-music-list";
+import "./scripts/get-music-list_2";
+import { observer } from "./scripts/observer_music";
+// import tracks from "./scripts/get-music-list";
 
 // import { tracks, updateStateEvent, addStateUpdateListener } from './scripts/random-mode.js';
 //
@@ -12,114 +14,126 @@ import tracks from "./scripts/get-music-list";
 //   console.log('Новое состояние:', newState);
 // });
 
-// main
-const playPauseBtn = document.getElementById("playPauseBtn");
-const previousBtn = document.getElementById("previousBtn");
-const nextBtn = document.getElementById("nextBtn");
+// const tracks = observer.observe(() => {
+//
+// });
 
-// other
-const currentSongNum = document.getElementById("currentSongNum");
-const logoImage = document.getElementById("logoImage");
-const bandName = document.getElementById("bandName");
-const songName = document.getElementById("songName");
+observer.observe((muscic) => {
+  const tracks = muscic;
 
-// const tracks =  getMusicList();
-let currentTrackIndex = 0;
-let isPlaying = false;
+  // const randomModeBtn = document.getElementById("randomModeBtn");
+  // randomModeBtn.addEventListener("click", observer.listener());
 
-function setLogo(track) {
-  const pathToImages = "./images/";
-  if (track.includes("1.5 кг Отличного Пюре")) {
-    logoImage.src = `${pathToImages}1.5_kg.jpg`;
+  // main
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const previousBtn = document.getElementById("previousBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  // other
+  const currentSongNum = document.getElementById("currentSongNum");
+  const logoImage = document.getElementById("logoImage");
+  const bandName = document.getElementById("bandName");
+  const songName = document.getElementById("songName");
+
+  let currentTrackIndex = 0;
+  let isPlaying = false;
+
+  function setLogo(track) {
+    const pathToImages = "./images/";
+    if (track.includes("1.5 кг Отличного Пюре")) {
+      logoImage.src = `${pathToImages}1.5_kg.jpg`;
+      return null;
+    }
+    if (track.includes("Anaal Nathrakh")) {
+      logoImage.src = `${pathToImages}anaal_nathrakh_official_logo.jpeg`;
+      return null;
+    }
+    if (track.includes("As I Lay Dying")) {
+      logoImage.src = `${pathToImages}as_i_lay_dying.jpg`;
+      return null;
+    }
+    if (track.includes("August Burns Red")) {
+      logoImage.src = `${pathToImages}august_burns_red_thrill_seeker.jpg`;
+      return null;
+    }
+    if (track.includes("Between The Buried And Me")) {
+      logoImage.src = `${pathToImages}btbam.webp`;
+      return null;
+    }
+    if (track.includes("The Maid")) {
+      logoImage.src = `${pathToImages}maidcore.jpg`;
+      return null;
+    }
+    if (track.includes("What Mad Universe")) {
+      logoImage.src = `${pathToImages}what_mad_universe.jpg`;
+
+      return null;
+    }
+    logoImage.src = `${pathToImages}default_logo.png`;
     return null;
   }
-  if (track.includes("Anaal Nathrakh")) {
-    logoImage.src = `${pathToImages}anaal_nathrakh_official_logo.jpeg`;
-    return null;
+
+  function setInfoBand(track) {
+    const indexLastSlash = track.lastIndexOf("/");
+    const fullNameSong = track.substring(indexLastSlash + 1);
+    const [band, song] = fullNameSong.split(" - ");
+    bandName.textContent = band;
+    songName.textContent = song.slice(0, song.lastIndexOf("."));
   }
-  if (track.includes("As I Lay Dying")) {
-    logoImage.src = `${pathToImages}as_i_lay_dying.jpg`;
-    return null;
+
+  function loadTrack(track) {
+    audioPlayer.src = track;
+    setLogo(track);
+    setInfoBand(track);
   }
-  if (track.includes("August Burns Red")) {
-    logoImage.src = `${pathToImages}august_burns_red_thrill_seeker.jpg`;
-    return null;
+
+  function playTrack(track) {
+    console.log("playTrack", track);
+    loadTrack(track);
+    // TODO: не работает при переключении музыки
+    // progressRange.value = 0
+
+    // TODO: для дебагинга на всякий
+    // console.dir(audioPlayer)
+
+    currentSongNum.textContent = (currentTrackIndex + 1).toString();
+    if (isPlaying) {
+      audioPlayer.play();
+    }
   }
-  if (track.includes("Between The Buried And Me")) {
-    logoImage.src = `${pathToImages}btbam.webp`;
-    return null;
+  function togglePlayPause() {
+    console.log("togglePlayPause");
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+      playPauseBtn.classList.add("playing");
+      audioPlayer.play();
+    } else {
+      playPauseBtn.classList.remove("playing");
+      audioPlayer.pause();
+    }
   }
-  if (track.includes("The Maid")) {
-    logoImage.src = `${pathToImages}maidcore.jpg`;
-    return null;
+
+  function nextTrack() {
+    console.log("nextTrack");
+    currentTrackIndex += 1;
+    if (currentTrackIndex >= tracks.length) {
+      currentTrackIndex = 0;
+    }
+    playTrack(tracks[currentTrackIndex]);
   }
-  if (track.includes("What Mad Universe")) {
-    logoImage.src = `${pathToImages}what_mad_universe.jpg`;
 
-    return null;
+  function previousTrack() {
+    console.log("previousTrack");
+    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    playTrack(tracks[currentTrackIndex]);
   }
-  logoImage.src = `${pathToImages}default_logo.png`;
-  return null;
-}
 
-function setInfoBand(track) {
-  const indexLastSlash = track.lastIndexOf("/");
-  const fullNameSong = track.substring(indexLastSlash + 1);
-  const [band, song] = fullNameSong.split(" - ");
-  bandName.textContent = band;
-  songName.textContent = song.slice(0, song.lastIndexOf("."));
-}
+  playPauseBtn.addEventListener("click", togglePlayPause);
+  previousBtn.addEventListener("click", previousTrack);
+  nextBtn.addEventListener("click", nextTrack);
+  audioPlayer.addEventListener("ended", nextTrack);
 
-function loadTrack(track) {
-  audioPlayer.src = track;
-  setLogo(track);
-  setInfoBand(track);
-}
-
-function playTrack(track) {
-  console.log("playTrack", track);
-  loadTrack(track);
-  // TODO: не работает при переключении музыки
-  // progressRange.value = 0
-
-  // TODO: для дебагинга на всякий
-  // console.dir(audioPlayer)
-
-  currentSongNum.textContent = (currentTrackIndex + 1).toString();
-  if (isPlaying) {
-    audioPlayer.play();
+  if (tracks.length) {
+    loadTrack(tracks[currentTrackIndex]);
   }
-}
-function togglePlayPause() {
-  console.log("togglePlayPause");
-  isPlaying = !isPlaying;
-  if (isPlaying) {
-    playPauseBtn.classList.add("playing");
-    audioPlayer.play();
-  } else {
-    playPauseBtn.classList.remove("playing");
-    audioPlayer.pause();
-  }
-}
-
-function nextTrack() {
-  console.log("nextTrack");
-  currentTrackIndex += 1;
-  if (currentTrackIndex >= tracks.length) {
-    currentTrackIndex = 0;
-  }
-  playTrack(tracks[currentTrackIndex]);
-}
-
-function previousTrack() {
-  console.log("previousTrack");
-  currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-  playTrack(tracks[currentTrackIndex]);
-}
-
-playPauseBtn.addEventListener("click", togglePlayPause);
-previousBtn.addEventListener("click", previousTrack);
-nextBtn.addEventListener("click", nextTrack);
-audioPlayer.addEventListener("ended", nextTrack);
-
-loadTrack(tracks[currentTrackIndex]);
+});

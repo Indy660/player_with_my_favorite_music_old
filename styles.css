@@ -121,6 +121,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /*TODO: убрать когда починю импорт*/
-#randomModeBtn {
-  visibility: hidden;
-}
+/*#randomModeBtn {*/
+/*  visibility: hidden;*/
+/*}*/
