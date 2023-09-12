@@ -43,38 +43,35 @@
 //
 // export { tracks, addStateUpdateListener };
 
+const defaultTrackList = Object.keys(import.meta.glob("/music/*.mp3"));
+const totalSongsSpan = document.getElementById("totalSongsNum");
+totalSongsSpan.textContent = defaultTrackList?.length || "0";
 
-const defaultTrackList =  Object.keys(import.meta.glob('/music/*.mp3'));
-const totalSongsSpan = document.getElementById('totalSongsNum');
-totalSongsSpan.textContent = defaultTrackList?.length || '0';
-
-const randomModeBtn = document.getElementById('randomModeBtn');
-let randomModeState = false
-
-randomModeBtn.addEventListener('click', changeState);
-
-function changeState() {
-  randomModeState = !randomModeState
-  getMusicList()
-}
+const randomModeBtn = document.getElementById("randomModeBtn");
+let randomModeState = false;
 
 function randomMusicList() {
-   return defaultTrackList
-      .map(value => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value)
+  return defaultTrackList
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 }
 
 function getMusicList() {
-  console.log('getMusicList', randomModeState)
-  return randomModeState ? randomMusicList() : defaultTrackList
+  console.log("getMusicList", randomModeState);
+  return randomModeState ? randomMusicList() : defaultTrackList;
 }
-// TODO: починить импорт
-let tracks =  getMusicList()
+
+function changeState() {
+  randomModeState = !randomModeState;
+  getMusicList();
+}
 
 // export {
 //   tracks,
 //   updateStateEvent
 // }
-
-export default tracks
+randomModeBtn.addEventListener("click", changeState);
+// TODO: починить импорт
+const tracks = getMusicList();
+export default tracks;
