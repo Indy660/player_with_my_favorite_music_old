@@ -19,13 +19,13 @@ const nextBtn = document.getElementById("nextBtn");
 
 // other
 const currentSongNum = document.getElementById("currentSongNum");
-const logoImage = document.getElementById("logoImage");
+const logoImage = document.getElementById("logoImage") as HTMLImageElement;
 const bandName = document.getElementById("bandName");
 const songName = document.getElementById("songName");
 
 // const tracks =  getMusicList();
-let currentTrackIndex = 0;
-let isPlaying = false;
+let currentTrackIndex: number = 0;
+let isPlaying: boolean = false;
 
 function setLogo(track) {
   const pathToImages = "./images/";
@@ -87,7 +87,7 @@ function playTrack(track) {
 
   currentSongNum.textContent = (currentTrackIndex + 1).toString();
   if (isPlaying) {
-    audioPlayer.play();
+    audioPlayer.play().then((r) => r);
   }
 }
 function togglePlayPause() {
@@ -95,7 +95,7 @@ function togglePlayPause() {
   isPlaying = !isPlaying;
   if (isPlaying) {
     playPauseBtn.classList.add("playing");
-    audioPlayer.play();
+    audioPlayer.play().then((r) => r);
   } else {
     playPauseBtn.classList.remove("playing");
     audioPlayer.pause();
