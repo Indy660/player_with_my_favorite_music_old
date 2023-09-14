@@ -1,16 +1,8 @@
-import { audioPlayer } from "./consts";
-import "./scripts/set-volume";
-import "./scripts/set-progress-range";
-import "./scripts/set-time";
-import tracks from "./scripts/get-music-list";
-
-// import { tracks, updateStateEvent, addStateUpdateListener } from './scripts/random-mode.js';
-//
-// // Прослушивание события обновления состояния
-// addStateUpdateListener((newState) => {
-//   // Обрабатывайте обновление состояния здесь
-//   console.log('Новое состояние:', newState);
-// });
+import { audioPlayer } from "./src/consts";
+import "./src/scripts/set-volume";
+import "./src/scripts/set-progress-range";
+import "./src/scripts/set-time";
+import tracks from "./src/scripts/get-music-list";
 
 // main
 const playPauseBtn = document.getElementById("playPauseBtn");
