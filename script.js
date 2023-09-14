@@ -1,8 +1,8 @@
-import { audioPlayer } from "./consts";
-import "./scripts/set-volume";
-import "./scripts/set-progress-range";
-import "./scripts/set-time";
-import tracks from "./scripts/get-music-list";
+import { audioPlayer } from "./src/consts";
+import "./src/scripts/set-volume";
+import "./src/scripts/set-progress-range";
+import "./src/scripts/set-time";
+import tracks from "./src/scripts/get-music-list";
 
 // import { tracks, updateStateEvent, addStateUpdateListener } from './scripts/random-mode.js';
 //
@@ -87,7 +87,7 @@ function playTrack(track) {
 
   currentSongNum.textContent = (currentTrackIndex + 1).toString();
   if (isPlaying) {
-    audioPlayer.play();
+    audioPlayer.play().then((r) => r);
   }
 }
 function togglePlayPause() {
@@ -95,7 +95,7 @@ function togglePlayPause() {
   isPlaying = !isPlaying;
   if (isPlaying) {
     playPauseBtn.classList.add("playing");
-    audioPlayer.play();
+    audioPlayer.play().then((r) => r);
   } else {
     playPauseBtn.classList.remove("playing");
     audioPlayer.pause();
