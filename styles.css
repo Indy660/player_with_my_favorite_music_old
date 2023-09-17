@@ -119,8 +119,3 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: 12px;
   color: #333;
 }
-
-/*TODO: убрать когда починю импорт*/
-#randomModeBtn {
-  visibility: hidden;
-}

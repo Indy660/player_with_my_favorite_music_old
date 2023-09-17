@@ -1,31 +1,71 @@
-// @ts-ignore next line
 const defaultTrackList = Object.keys(import.meta.glob("/music/*.mp3"));
+
 const totalSongsSpan = document.getElementById(
-  "totalSongsNum"
+  "totalSongsNum",
 ) as HTMLSpanElement;
 totalSongsSpan.textContent = (defaultTrackList?.length).toString() || "0";
 
 const randomModeBtn = document.getElementById("randomModeBtn");
-let randomModeState = false;
 
-function randomMusicList() {
-  return defaultTrackList
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
+interface TracksOptions {
+  defaultTracks: string[];
 }
 
-function getMusicList() {
-  console.log("getMusicList", randomModeState);
-  return randomModeState ? randomMusicList() : defaultTrackList;
+interface Listener {
+  (tracks: string[]): void;
 }
 
-function changeState() {
-  randomModeState = !randomModeState;
-  getMusicList();
+class Tracks {
+  private defaultTracks: string[];
+  private currentTracks: string[];
+  private isRandom = false;
+  private listeners: Listener[] = [];
+  public readonly length: number;
+
+  public constructor({ defaultTracks }: TracksOptions) {
+    this.defaultTracks = defaultTracks;
+    this.currentTracks = defaultTracks;
+    this.length = defaultTracks.length;
+  }
+
+  public subscribe(listener: Listener) {
+    this.listeners.push(listener);
+
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
+
+  public getTracks() {
+    return this.currentTracks;
+  }
+
+  public toggleRandom() {
+    this.isRandom = !this.isRandom;
+
+    if (this.isRandom) {
+      this.currentTracks = this.getRandomTracks();
+    } else {
+      this.currentTracks = this.defaultTracks;
+    }
+
+    this.listeners.forEach((l) => l(this.currentTracks));
+  }
+
+  private getRandomTracks() {
+    return this.defaultTracks
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+  }
 }
 
-randomModeBtn.addEventListener("click", changeState);
-// TODO: починить импорт
-const tracks = getMusicList();
-export default tracks;
+const tracks = new Tracks({
+  defaultTracks: defaultTrackList,
+});
+
+randomModeBtn?.addEventListener("click", () => {
+  tracks.toggleRandom();
+});
+
+export { tracks };

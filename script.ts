@@ -2,24 +2,23 @@ import { audioPlayer } from "./src/consts";
 import "./src/scripts/set-volume";
 import "./src/scripts/set-progress-range";
 import "./src/scripts/set-time";
-import tracks from "./src/scripts/get-music-list";
+import { tracks } from "./src/scripts/get-music-list";
 
 // main
-const playPauseBtn = document.getElementById("playPauseBtn");
-const previousBtn = document.getElementById("previousBtn");
-const nextBtn = document.getElementById("nextBtn");
+const playPauseBtn = document.getElementById("playPauseBtn")!;
+const previousBtn = document.getElementById("previousBtn")!;
+const nextBtn = document.getElementById("nextBtn")!;
 
 // other
-const currentSongNum = document.getElementById("currentSongNum");
+const currentSongNum = document.getElementById("currentSongNum")!;
 const logoImage = document.getElementById("logoImage") as HTMLImageElement;
-const bandName = document.getElementById("bandName");
-const songName = document.getElementById("songName");
+const bandName = document.getElementById("bandName")!;
+const songName = document.getElementById("songName")!;
 
-// const tracks =  getMusicList();
-let currentTrackIndex: number = 0;
-let isPlaying: boolean = false;
+let currentTrackIndex = 0;
+let isPlaying = false;
 
-function setLogo(track) {
+function setLogo(track: string) {
   const pathToImages = "./images/";
   if (track.includes("1.5 кг Отличного Пюре")) {
     logoImage.src = `${pathToImages}1.5_kg.jpg`;
@@ -54,7 +53,7 @@ function setLogo(track) {
   return null;
 }
 
-function setInfoBand(track) {
+function setInfoBand(track: string) {
   const indexLastSlash = track.lastIndexOf("/");
   const fullNameSong = track.substring(indexLastSlash + 1);
   const [band, song] = fullNameSong.split(" - ");
@@ -62,13 +61,13 @@ function setInfoBand(track) {
   songName.textContent = song.slice(0, song.lastIndexOf("."));
 }
 
-function loadTrack(track) {
+function loadTrack(track: string) {
   audioPlayer.src = track;
   setLogo(track);
   setInfoBand(track);
 }
 
-function playTrack(track) {
+function playTrack(track: string) {
   console.log("playTrack", track);
   loadTrack(track);
   // TODO: не работает при переключении музыки
@@ -100,13 +99,13 @@ function nextTrack() {
   if (currentTrackIndex >= tracks.length) {
     currentTrackIndex = 0;
   }
-  playTrack(tracks[currentTrackIndex]);
+  playTrack(tracks.getTracks()[currentTrackIndex]);
 }
 
 function previousTrack() {
   console.log("previousTrack");
   currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-  playTrack(tracks[currentTrackIndex]);
+  playTrack(tracks.getTracks()[currentTrackIndex]);
 }
 
 playPauseBtn.addEventListener("click", togglePlayPause);
@@ -114,4 +113,17 @@ previousBtn.addEventListener("click", previousTrack);
 nextBtn.addEventListener("click", nextTrack);
 audioPlayer.addEventListener("ended", nextTrack);
 
-loadTrack(tracks[currentTrackIndex]);
+function onTracksUpdate(nextTracks: string[]) {
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+
+  // const tracks =  getMusicList();
+  currentTrackIndex = 0;
+  isPlaying = false;
+
+  loadTrack(nextTracks[0]);
+}
+
+tracks.subscribe(onTracksUpdate);
+
+onTracksUpdate(tracks.getTracks());
