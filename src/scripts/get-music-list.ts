@@ -16,7 +16,7 @@ interface Listener {
 }
 
 class Tracks {
-  private defaultTracks: string[];
+  private readonly defaultTracks: string[];
   private currentTracks: string[];
   private isRandom = false;
   private listeners: Listener[] = [];
@@ -28,9 +28,12 @@ class Tracks {
     this.length = defaultTracks.length;
   }
 
+  // вызывается в самом начале
   public subscribe(listener: Listener) {
     this.listeners.push(listener);
+    console.log("subscribe", this.listeners, listener);
 
+    // не нужен т.к у нас нету отписки, треки статичны
     return () => {
       this.listeners = this.listeners.filter((l) => l !== listener);
     };
@@ -50,6 +53,7 @@ class Tracks {
     }
 
     this.listeners.forEach((l) => l(this.currentTracks));
+    console.log("toggleRandom", this.listeners);
   }
 
   private getRandomTracks() {
