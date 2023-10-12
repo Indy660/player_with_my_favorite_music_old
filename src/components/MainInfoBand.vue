@@ -1,65 +1,60 @@
 <script setup lang="ts">
-defineProps({
-  pathToFile: {
-    type: String,
-    default: "",
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "MainInfoBand",
+  props: {
+    fullSongName: {
+      type: String,
+      default: "",
+    },
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    getLogoImage() {
+      const pathToImages = "./images/";
+      if (this.fullSongName.includes("1.5 кг Отличного Пюре")) {
+        return `${pathToImages}1.5_kg.jpg`;
+      }
+      if (this.fullSongName.includes("Anaal Nathrakh")) {
+        return `${pathToImages}anaal_nathrakh_official_logo.jpeg`;
+      }
+      if (this.fullSongName.includes("As I Lay Dying")) {
+        return `${pathToImages}as_i_lay_dying.jpg`;
+      }
+      if (this.fullSongName.includes("August Burns Red")) {
+        return `${pathToImages}august_burns_red_thrill_seeker.jpg`;
+      }
+      if (this.fullSongName.includes("Between The Buried And Me")) {
+        return `${pathToImages}btbam.webp`;
+      }
+      if (this.fullSongName.includes("The Maid")) {
+        return `${pathToImages}maidcore.jpg`;
+      }
+      if (this.fullSongName.includes("What Mad Universe")) {
+        return `${pathToImages}what_mad_universe.jpg`;
+      }
+      return `${pathToImages}default_logo.png`;
+    },
+    getInfoBand() {
+      let [bandName, songName] = this.fullSongName.split(" - ");
+      songName = songName.slice(0, this.fullSongName.lastIndexOf("."));
+      return {
+        bandName: bandName,
+        songName: songName,
+      };
+    },
   },
 });
-// define
-function setLogo(track: string) {
-  const pathToImages = "./images/";
-  if (track.includes("1.5 кг Отличного Пюре")) {
-    logoImage.src = `${pathToImages}1.5_kg.jpg`;
-    return null;
-  }
-  if (track.includes("Anaal Nathrakh")) {
-    logoImage.src = `${pathToImages}anaal_nathrakh_official_logo.jpeg`;
-    return null;
-  }
-  if (track.includes("As I Lay Dying")) {
-    logoImage.src = `${pathToImages}as_i_lay_dying.jpg`;
-    return null;
-  }
-  if (track.includes("August Burns Red")) {
-    logoImage.src = `${pathToImages}august_burns_red_thrill_seeker.jpg`;
-    return null;
-  }
-  if (track.includes("Between The Buried And Me")) {
-    logoImage.src = `${pathToImages}btbam.webp`;
-    return null;
-  }
-  if (track.includes("The Maid")) {
-    logoImage.src = `${pathToImages}maidcore.jpg`;
-    return null;
-  }
-  if (track.includes("What Mad Universe")) {
-    logoImage.src = `${pathToImages}what_mad_universe.jpg`;
-
-    return null;
-  }
-  logoImage.src = `${pathToImages}default_logo.png`;
-  return null;
-}
-
-function setInfoBand(track: string) {
-  const indexLastSlash = track.lastIndexOf("/");
-  const fullNameSong = track.substring(indexLastSlash + 1);
-  const [band, song] = fullNameSong.split(" - ");
-  bandName.textContent = band;
-  songName.textContent = song.slice(0, song.lastIndexOf("."));
-}
 </script>
 
 <template>
-  <img
-    id="logoImage"
-    src="../../src/assets/default_logo.png"
-    class="album-image"
-    alt=""
-  />
+  <img id="logoImage" :src="getLogoImage" class="album-image" alt="" />
   <div class="artist-info">
-    <div id="bandName" class="band">{{ bandName }}</div>
-    <div id="songName" class="song">{{ songName }}</div>
+    <div id="bandName" class="band">{{ getInfoBand.bandName }}</div>
+    <div id="songName" class="song">{{ getInfoBand.songName }}</div>
   </div>
 </template>
 

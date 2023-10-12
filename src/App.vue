@@ -9,7 +9,7 @@ import VolumeControl from "./components/VolumeControl.vue";
 
 <template>
   <div class="container">
-    <MainInfoBand />
+    <MainInfoBand :full-song-name="fullSongName" />
     <!--    <img-->
     <!--      id="logoImage"-->
     <!--      src="../src/assets/default_logo.png"-->
@@ -72,6 +72,23 @@ import VolumeControl from "./components/VolumeControl.vue";
     <audio preload="metadata" id="audioPlayer"></audio>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  data() {
+    return {
+      pathToFile: "",
+    };
+  },
+  computed: {
+    fullSongName() {
+      const indexLastSlash = this.pathToFile.lastIndexOf("/");
+      return this.pathToFile.substring(indexLastSlash + 1);
+    },
+  },
+});
+</script>
 
 <style>
 body {
