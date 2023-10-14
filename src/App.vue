@@ -20,7 +20,7 @@ import VolumeControl from "./components/VolumeControl.vue";
     <!--      <div id="bandName" class="band"></div>-->
     <!--      <div id="songName" class="song"></div>-->
     <!--    </div>-->
-    <VolumeControl />
+    <VolumeControl @volumeChange="setVolume" :volume="audioPlayer.value" />
     <!--    <div class="volume-control">-->
     <!--      <button id="volumeDownBtn" class="player-button">-->
     <!--        <i class="fas fa-volume-up"></i>-->
@@ -50,7 +50,7 @@ import VolumeControl from "./components/VolumeControl.vue";
     <!--        <span id="totalTime">0:00</span>-->
     <!--      </div>-->
     <!--    </div>-->
-    <MainControl />
+    <MainControl @previous="" @next="" @playPause="" :is-play="false" />
     <!--    <div class="main-control">-->
     <!--      <button id="previousBtn" class="player-button">-->
     <!--        <i class="fas fa-step-backward"></i>-->
@@ -69,7 +69,19 @@ import VolumeControl from "./components/VolumeControl.vue";
     <!--        <span id="currentSongNum">1</span>/<span id="totalSongsNum"></span>-->
     <!--      </div>-->
     <!--    </div>-->
-    <audio preload="metadata" id="audioPlayer"></audio>
+    <audio
+      v-model="audioPlayer"
+      preload="metadata"
+      id="audioPlayer"
+      @timeupdate="onTimeUpdate"
+      @input="seekAudio"
+      @canplay="setTotalTime"
+    ></audio>
+
+    <!--      audioPlayer.addEventListener("timeupdate", updateProgress);-->
+    <!--      progressRange.addEventListener("input", seekAudio);-->
+    <!--      audioPlayer.addEventListener("timeupdate", updateCurrentTime);-->
+    <!--      audioPlayer.addEventListener("canplay", setTotalTime);-->
   </div>
 </template>
 
@@ -78,14 +90,38 @@ import { defineComponent } from "vue";
 export default defineComponent({
   data() {
     return {
+      audioPlayer: {},
       pathToFile: "",
     };
   },
   computed: {
     fullSongName() {
       const indexLastSlash = this.pathToFile.lastIndexOf("/");
-      return this.pathToFile.substring(indexLastSlash + 1);
+      return this.pathToFile
+        .substring(indexLastSlash + 1)
+        .slice(0, this.fullSongName.lastIndexOf("."));
     },
+  },
+  methods: {
+    onTimeUpdate(event) {
+      this.updateCurrentTime(event);
+      this.updateProgress(event);
+    },
+    updateCurrentTime(event) {
+      currentTimeElement.textContent = this.formatTime(event.currentTime);
+    },
+    updateProgress(event) {},
+    setVolume(event) {
+      console.log("setVolume", event);
+      this.audioPlayer.volume = event.value / 100;
+    },
+    formatTime(timeInSeconds) {
+      const minutes = Math.floor(timeInSeconds / 60);
+      const seconds = Math.floor(timeInSeconds % 60);
+      return `${minutes}:${String(seconds).padStart(2, "0")}`;
+    },
+    seekAudio() {},
+    setTotalTime() {},
   },
 });
 </script>

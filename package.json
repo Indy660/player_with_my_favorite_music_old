@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rushstack/eslint-patch": "^1.5.1",
+    "@vue/eslint-config-typescript": "^12.0.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

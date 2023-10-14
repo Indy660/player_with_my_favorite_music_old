@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -40,7 +40,6 @@ export default defineComponent({
     },
     getInfoBand() {
       let [bandName, songName] = this.fullSongName.split(" - ");
-      songName = songName.slice(0, this.fullSongName.lastIndexOf("."));
       return {
         bandName: bandName,
         songName: songName,

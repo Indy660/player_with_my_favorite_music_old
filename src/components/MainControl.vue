@@ -1,14 +1,25 @@
-<script setup lang="ts"></script>
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "MainControl",
+  props: {
+    isPlay: {
+      type: Boolean,
+      default: false,
+    },
+  },
+});
+</script>
 
 <template>
   <div class="main-control">
-    <button id="previousBtn" class="player-button">
+    <button @click="$emit('previous')" id="previousBtn" class="player-button">
       <i class="fas fa-step-backward"></i>
     </button>
-    <button id="playPauseBtn" class="player-button">
+    <button @click="$emit('playPause')" id="playPauseBtn" class="player-button">
       <i class="fas fa-play"></i>
     </button>
-    <button id="nextBtn" class="player-button">
+    <button @click="$emit('next')" id="nextBtn" class="player-button">
       <i class="fas fa-step-forward"></i>
     </button>
   </div>

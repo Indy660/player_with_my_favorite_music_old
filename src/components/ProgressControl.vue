@@ -1,4 +1,35 @@
-<script setup lang="ts"></script>
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "ProgressControl",
+  props: {
+    volume: {
+      type: Number,
+      default: 80,
+    },
+    currentTime: {
+      type: String,
+      default: "0:00",
+    },
+    totalTime: {
+      type: String,
+      default: "0:00",
+    },
+  },
+  computed: {
+    convertToValue() {
+      return this.volume * 100;
+    },
+  },
+  methods: {
+    timeHandler(event) {
+      console.log("timeHandler", event);
+      this.$emit("timeChange", event);
+      // audioPlayer.volume = volumeRange.value / 100;
+    },
+  },
+});
+</script>
 
 <template>
   <div class="progress-control">
@@ -7,12 +38,13 @@
       id="progressRange"
       min="0"
       max="100"
-      value="0"
+      :value="convertToValue"
       step="1"
+      @change="timeHandler"
     />
     <div class="time-display">
-      <span id="currentTime">0:00</span>
-      <span id="totalTime">0:00</span>
+      <span id="currentTime">{{ currentTime }}</span>
+      <span id="totalTime">{{ totalTime }}</span>
     </div>
   </div>
 </template>
