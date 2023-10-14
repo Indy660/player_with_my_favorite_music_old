@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "MainControl",
   props: {
-    isPlay: {
+    isPlaying: {
       type: Boolean,
       default: false,
     },
@@ -16,7 +16,12 @@ export default defineComponent({
     <button @click="$emit('previous')" id="previousBtn" class="player-button">
       <i class="fas fa-step-backward"></i>
     </button>
-    <button @click="$emit('playPause')" id="playPauseBtn" class="player-button">
+    <button
+      @click="$emit('playPause')"
+      id="playPauseBtn"
+      :class="{ playing: isPlaying }"
+      class="player-button"
+    >
       <i class="fas fa-play"></i>
     </button>
     <button @click="$emit('next')" id="nextBtn" class="player-button">

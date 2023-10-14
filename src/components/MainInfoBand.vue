@@ -14,7 +14,11 @@ export default defineComponent({
   },
   computed: {
     getLogoImage() {
-      const pathToImages = "./images/";
+      // console.log(
+      //   this.fullSongName,
+      //   this.fullSongName.includes("1.5 кг Отличного Пюре"),
+      // );
+      const pathToImages = "../src/assets/";
       if (this.fullSongName.includes("1.5 кг Отличного Пюре")) {
         return `${pathToImages}1.5_kg.jpg`;
       }
