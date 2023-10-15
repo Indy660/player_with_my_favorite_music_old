@@ -3,9 +3,9 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "ProgressControl",
   props: {
-    volume: {
+    duration: {
       type: Number,
-      default: 80,
+      default: 0,
     },
     currentTime: {
       type: String,
@@ -18,14 +18,24 @@ export default defineComponent({
   },
   computed: {
     convertToValue() {
-      return this.volume * 100;
+      return this.duration * 100;
+    },
+    convertCurrentTime() {
+      return this.formatTime(this.currentTime);
+    },
+    convertTotalTime() {
+      return this.formatTime(this.totalTime);
     },
   },
   methods: {
     timeHandler(event) {
       console.log("timeHandler", event);
       this.$emit("timeChange", event);
-      // audioPlayer.volume = volumeRange.value / 100;
+    },
+    formatTime(timeInSeconds) {
+      const minutes = Math.floor(timeInSeconds / 60);
+      const seconds = Math.floor(timeInSeconds % 60);
+      return `${minutes}:${String(seconds).padStart(2, "0")}`;
     },
   },
 });
@@ -43,8 +53,8 @@ export default defineComponent({
       @change="timeHandler"
     />
     <div class="time-display">
-      <span id="currentTime">{{ currentTime }}</span>
-      <span id="totalTime">{{ totalTime }}</span>
+      <span id="currentTime">{{ convertCurrentTime }}</span>
+      <span id="totalTime">{{ convertTotalTime }}</span>
     </div>
   </div>
 </template>

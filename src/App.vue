@@ -1,26 +1,42 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import MainControl from "./components/MainControl.vue";
-import VolumeControl from "./components/VolumeControl.vue";
-import OtherControl from "./components/OtherControl.vue";
-import ProgressControl from "./components/ProgressControl.vue";
 import MainInfoBand from "./components/MainInfoBand.vue";
+import VolumeControl from "./components/VolumeControl.vue";
+import ProgressControl from "./components/ProgressControl.vue";
+import MainControl from "./components/MainControl.vue";
+import OtherControl from "./components/OtherControl.vue";
+
+interface CustomAudioElement extends HTMLAudioElement {
+  currentRange: number;
+  duration: number;
+  volume: number;
+}
 
 const audioPlayer = ref<HTMLAudioElement | null>(null);
 export default defineComponent({
   components: {
-    MainControl,
-    VolumeControl,
-    OtherControl,
-    ProgressControl,
     MainInfoBand,
+    VolumeControl,
+    ProgressControl,
+    MainControl,
+    OtherControl,
   },
   data() {
     return {
-      // audioPlayer: {},
       currentTrackIndex: 0,
       isPlaying: false,
       trackList: [],
+      currentTime: 0,
+      totalTime: 0,
+      currentVolume: 0.8,
+      currentRange: 0,
+
+      // loaded: false,
+
+      // currentPlaybackRate: 1,
+      // savedVolume: 0,
+      // showSettings: false,
+      // isPlaying: false,
     };
   },
   computed: {
@@ -39,15 +55,26 @@ export default defineComponent({
     this.pathToCurrentFile = this.trackList[0];
   },
   mounted() {
-    audioPlayer.value = this.$refs.audioPlayer as HTMLAudioElement;
+    audioPlayer.value = this.$refs.audioPlayer as CustomAudioElement;
   },
   methods: {
+    handlerCanPlay(event) {
+      this.setTotalTime(event);
+      this.playTrack();
+    },
+    handlerTimeChange(event) {
+      if (audioPlayer.value) {
+        this.currentRange =
+          (audioPlayer.value.currentRange / audioPlayer.value.duration) * 100;
+      }
+    },
     onTimeUpdate(event) {
       this.updateCurrentTime(event);
       this.updateProgress(event);
     },
     updateCurrentTime(event) {
-      console.log("updateCurrentTime", event);
+      console.dir("updateCurrentTime", event);
+
       // currentTimeElement.textContent = this.formatTime(event.currentTime);
     },
     updateProgress(event) {
@@ -55,41 +82,27 @@ export default defineComponent({
     },
     setVolume(event) {
       console.log("setVolume", event);
+      // :TODO: поправить
       if ("volume" in audioPlayer.value) {
         audioPlayer.value.volume = event.value / 100;
       }
     },
-    formatTime(timeInSeconds) {
-      const minutes = Math.floor(timeInSeconds / 60);
-      const seconds = Math.floor(timeInSeconds % 60);
-      return `${minutes}:${String(seconds).padStart(2, "0")}`;
-    },
     seekAudio(event) {
       console.log("seekAudio", event);
+      audioPlayer.value.currentTime =
+        (progressRange.value / 100) * audioPlayer.duration;
     },
     setTotalTime(event) {
       console.log("setTotalTime", event);
     },
-
-    loadTrack(track: string) {
-      if ("src" in audioPlayer.value) {
-        audioPlayer.value.src = track;
-      }
-      // this.setLogo(track);
-      // this.setInfoBand(track);
-    },
-
-    playTrack(track: string) {
-      console.log("playTrack", track);
-      this.loadTrack(track);
-      // TODO: для дебагинга на всякий
-      console.dir(audioPlayer.value);
-
-      // this.currentSongNum.textContent = (currentTrackIndex + 1).toString();
+    playTrack() {
       if (this.isPlaying) {
-        audioPlayer.value?.play().then((r) => r);
+        try {
+          audioPlayer.value?.play().then((r) => r);
+        } catch (error) {}
       }
     },
+
     togglePlayPause() {
       console.dir(
         audioPlayer,
@@ -113,7 +126,6 @@ export default defineComponent({
       if (this.currentTrackIndex >= this.trackList.length) {
         this.currentTrackIndex = 0;
       }
-      // this.playTrack(this.trackList.getTracks()[this.currentTrackIndex]);
     },
 
     previousTrack() {
@@ -121,20 +133,6 @@ export default defineComponent({
       this.currentTrackIndex =
         (this.currentTrackIndex - 1 + this.trackList.length) %
         this.trackList.length;
-      // this.playTrack(this.tracks.getTracks()[this.currentTrackIndex]);
-    },
-
-    onTracksUpdate(nextTracks: string[]) {
-      audioPlayer.value?.pause();
-      if ("currentTime" in audioPlayer.value) {
-        audioPlayer.value.currentTime = 0;
-      }
-
-      // const tracks =  getMusicList();
-      this.currentTrackIndex = 0;
-      this.isPlaying = false;
-
-      this.loadTrack(nextTracks[0]);
     },
   },
 });
@@ -145,23 +143,24 @@ export default defineComponent({
     <MainInfoBand :full-song-name="fullSongName" />
     <!--      :volume="audioPlayer.value"-->
     <VolumeControl @volumeChange="setVolume" />
-    <ProgressControl />
+    <ProgressControl @timeChange="handlerTimeChange" />
     <MainControl
       @previous="previousTrack"
       @next="nextTrack"
       @playPause="togglePlayPause"
-      :is-play="isPlaying"
+      :is-playing="isPlaying"
     />
     <OtherControl :current-numb-song="0" :total-numb-song="0" />
     <!--      src="./music/Angel Vivaldi - A Martian Winter.mp3"-->
+    <!--      :src="pathToCurrentFile"-->
     <audio
-      :src="pathToCurrentFile"
+      :src="`src/${pathToCurrentFile}`"
       ref="audioPlayer"
       preload="metadata"
       id="audioPlayer"
       @timeupdate="onTimeUpdate"
       @input="seekAudio"
-      @canplay="setTotalTime"
+      @canplay="handlerCanPlay"
     />
     <!--      audioPlayer.addEventListener("timeupdate", updateProgress);-->
     <!--      progressRange.addEventListener("input", seekAudio);-->
