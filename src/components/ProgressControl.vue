@@ -3,22 +3,22 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "ProgressControl",
   props: {
-    duration: {
+    // duration: {
+    //   type: Number,
+    //   default: 0,
+    // },
+    currentTime: {
       type: Number,
       default: 0,
     },
-    currentTime: {
-      type: String,
-      default: "0:00",
-    },
     totalTime: {
-      type: String,
-      default: "0:00",
+      type: Number,
+      default: 0,
     },
   },
   computed: {
     convertToValue() {
-      return this.duration * 100;
+      return (this.currentTime / this.totalTime) * 100;
     },
     convertCurrentTime() {
       return this.formatTime(this.currentTime);
@@ -29,7 +29,7 @@ export default defineComponent({
   },
   methods: {
     timeHandler(event) {
-      console.log("timeHandler", event);
+      // console.log("timeHandler", event);
       this.$emit("timeChange", event);
     },
     formatTime(timeInSeconds) {
@@ -50,7 +50,7 @@ export default defineComponent({
       max="100"
       :value="convertToValue"
       step="1"
-      @change="timeHandler"
+      @input="timeHandler"
     />
     <div class="time-display">
       <span id="currentTime">{{ convertCurrentTime }}</span>

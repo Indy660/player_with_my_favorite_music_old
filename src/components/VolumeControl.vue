@@ -15,9 +15,8 @@ export default defineComponent({
   },
   methods: {
     volumeHandler(event) {
-      console.log("volumeHandler", event);
-      this.$emit("volumeChange", event);
-      // audioPlayer.volume = volumeRange.value / 100;
+      // console.log("volumeHandler", event.target.value);
+      this.$emit("volumeChange", event.target.value);
     },
   },
 });
@@ -37,7 +36,7 @@ export default defineComponent({
       max="100"
       value="80"
       step="1"
-      @change="volumeHandler"
+      @input="volumeHandler"
     />
   </div>
 </template>
