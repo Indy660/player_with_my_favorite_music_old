@@ -17,7 +17,11 @@ export default defineComponent({
 
 <template>
   <div class="other">
-    <i id="randomModeBtn" class="fa-solid fa-shuffle"></i>
+    <i
+      id="randomModeBtn"
+      @click="$emit('randomClick')"
+      class="fa-solid fa-shuffle"
+    ></i>
     <div class="song-display">
       <span id="currentSongNum">{{ currentNumbSong }}</span
       >/<span id="totalSongsNum"> {{ totalNumbSong }}</span>

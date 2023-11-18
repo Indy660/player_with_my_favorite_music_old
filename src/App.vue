@@ -13,6 +13,7 @@ interface CustomAudioElement extends HTMLAudioElement {
 }
 
 const audioPlayer = ref<HTMLAudioElement | null>(null);
+const TRACK_LIST = Object.keys(import.meta.glob("./music/*.mp3"));
 export default defineComponent({
   components: {
     MainInfoBand,
@@ -24,12 +25,13 @@ export default defineComponent({
   data() {
     return {
       currentTrackIndex: 0,
-      trackList: [],
+      totalNumbSongs: 0,
 
       isPlaying: false,
       currentTime: 0,
       totalTime: 0,
 
+      isRandomTracks: false,
       // TODO: мб потом сделать единое хранилище
       // currentVolume: 0.8,
       // currentRange: 0,
@@ -37,17 +39,23 @@ export default defineComponent({
   },
   computed: {
     pathToCurrentFile() {
-      return this.trackList[this.currentTrackIndex];
+      return this.currentTracks[this.currentTrackIndex];
     },
     fullSongName() {
       const indexLastSlash = this.pathToCurrentFile.lastIndexOf("/");
       const dotIndex = this.pathToCurrentFile.lastIndexOf(".");
       return this.pathToCurrentFile.substring(indexLastSlash + 1, dotIndex);
     },
+    currentTracks() {
+      if (this.isRandomTracks) {
+        return this.getRandomTracks();
+      }
+      return TRACK_LIST;
+    },
   },
   created() {
-    this.trackList = Object.keys(import.meta.glob("./music/*.mp3"));
-    this.pathToCurrentFile = this.trackList[0];
+    this.pathToCurrentFile = TRACK_LIST[0];
+    this.totalNumbSongs = TRACK_LIST.length;
   },
   mounted() {
     audioPlayer.value = this.$refs.audioPlayer as CustomAudioElement;
@@ -83,7 +91,6 @@ export default defineComponent({
         } catch (error) {}
       }
     },
-
     togglePlayPause() {
       this.isPlaying = !this.isPlaying;
       if (this.isPlaying) {
@@ -94,20 +101,25 @@ export default defineComponent({
         audioPlayer.value?.pause();
       }
     },
-
     nextTrack() {
       // console.log("nextTrack");
       this.currentTrackIndex += 1;
-      if (this.currentTrackIndex >= this.trackList.length) {
+      if (this.currentTrackIndex >= TRACK_LIST.length) {
         this.currentTrackIndex = 0;
       }
     },
-
     previousTrack() {
       // console.log("previousTrack");
       this.currentTrackIndex =
-        (this.currentTrackIndex - 1 + this.trackList.length) %
-        this.trackList.length;
+        (this.currentTrackIndex - 1 + TRACK_LIST.length) % TRACK_LIST.length;
+    },
+    handlerRandomBtn() {
+      this.isRandomTracks = !this.isRandomTracks;
+    },
+    getRandomTracks() {
+      return TRACK_LIST.map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
     },
   },
 });
@@ -130,7 +142,8 @@ export default defineComponent({
     />
     <OtherControl
       :current-numb-song="currentTrackIndex + 1"
-      :total-numb-song="trackList.length || 1"
+      :total-numb-song="totalNumbSongs"
+      @randomClick="handlerRandomBtn"
     />
     <!--      src="./music/Angel Vivaldi - A Martian Winter.mp3"-->
     <!--      :src="pathToCurrentFile"-->
@@ -142,10 +155,6 @@ export default defineComponent({
       @timeupdate="onTimeUpdate"
       @canplay="handlerCanPlay"
     />
-    <!--      audioPlayer.addEventListener("timeupdate", updateProgress);-->
-    <!--      progressRange.addEventListener("input", seekAudio);-->
-    <!--      audioPlayer.addEventListener("timeupdate", updateCurrentTime);-->
-    <!--      audioPlayer.addEventListener("canplay", setTotalTime);-->
   </div>
 </template>
 
