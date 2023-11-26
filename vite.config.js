@@ -5,5 +5,9 @@ export default {
         assetFileNames: "music/[name].[ext]",
       },
     },
+    base:
+      process.env.NODE_ENV === "production"
+        ? "/player_with_my_favorite_music/"
+        : "/",
   },
 };
