@@ -13,7 +13,34 @@ interface CustomAudioElement extends HTMLAudioElement {
 }
 
 const audioPlayer = ref<HTMLAudioElement | null>(null);
-const TRACK_LIST = Object.keys(import.meta.glob("./music/*.mp3"));
+// const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3"));
+// const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+//   (path) => {
+//     const slicedPath = path.replace("./assets/music/", "");
+//     return import.meta.env.DEV
+//       ? `./src/assets/music/${slicedPath}`
+//       : `${import.meta.env.BASE_URL}assets/music/${slicedPath}`;
+//   },
+// );
+// TODO: разобраться!!!!
+const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+  (path) => {
+    const slicedPath = path.replace("./assets/music/", "");
+    return import.meta.env.DEV
+      ? `./src/assets/music/${slicedPath}`
+      : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
+  },
+);
+const TRACK_LIST3 = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+  (path) => {
+    const slicedPath = path.replace("./assets/music/", "");
+    return import.meta.env.DEV
+      ? `./src/assets/music/${slicedPath}`
+      : `./assets/${slicedPath}`;
+  },
+);
+console.log("TRACK_LIST", TRACK_LIST);
+console.log("TRACK_LIST3", TRACK_LIST3);
 export default defineComponent({
   components: {
     MainInfoBand,
@@ -56,6 +83,15 @@ export default defineComponent({
   created() {
     this.pathToCurrentFile = TRACK_LIST[0];
     this.totalNumbSongs = TRACK_LIST.length;
+    const TRACK_LIST2 = Object.keys(
+      import.meta.glob("./assets/music/*.mp3"),
+    ).map((path) => {
+      const slicedPath = path.replace("./assets/music/", "");
+      return import.meta.env.DEV
+        ? `./src/assets/music/${slicedPath}`
+        : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
+    });
+    console.log("TRACK_LIST2", TRACK_LIST2);
   },
   mounted() {
     audioPlayer.value = this.$refs.audioPlayer as CustomAudioElement;
@@ -148,7 +184,7 @@ export default defineComponent({
     <!--      src="./music/Angel Vivaldi - A Martian Winter.mp3"-->
     <!--      :src="pathToCurrentFile"-->
     <audio
-      :src="`src/${pathToCurrentFile}`"
+      :src="pathToCurrentFile"
       ref="audioPlayer"
       preload="metadata"
       id="audioPlayer"

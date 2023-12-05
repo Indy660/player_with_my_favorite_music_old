@@ -8,6 +8,7 @@
     "dev": "vite --port 5000",
     "build": "vite build",
     "preview": "vite preview",
+    "build_preview": "vite build && vite preview",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
