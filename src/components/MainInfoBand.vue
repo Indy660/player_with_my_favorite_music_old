@@ -16,7 +16,7 @@ export default defineComponent({
     };
   },
   async created() {
-    const images = import.meta.glob("../assets/images/*");
+    const images = import.meta.glob("@assets/images/*");
     for (const path in images) {
       const imageName = path.replace(/^.*\/(.*)\.\w+$/, "$1"); // Получение имени файла без расширения
       this.imagePaths[imageName] = (await images[path]()).default; // Динамический импорт и сохранение пути к изображению в объекте
