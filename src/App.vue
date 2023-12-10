@@ -13,8 +13,8 @@ interface CustomAudioElement extends HTMLAudioElement {
 }
 
 const audioPlayer = ref<HTMLAudioElement | null>(null);
-// const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3"));
-// const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+// const this.trackList = Object.keys(import.meta.glob("./assets/music/*.mp3"));
+// const this.trackList = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
 //   (path) => {
 //     const slicedPath = path.replace("./assets/music/", "");
 //     return import.meta.env.DEV
@@ -23,24 +23,30 @@ const audioPlayer = ref<HTMLAudioElement | null>(null);
 //   },
 // );
 // TODO: разобраться!!!!
-const TRACK_LIST = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
-  (path) => {
-    const slicedPath = path.replace("./assets/music/", "");
-    return import.meta.env.DEV
-      ? `./src/assets/music/${slicedPath}`
-      : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
-  },
-);
-const TRACK_LIST3 = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
-  (path) => {
-    const slicedPath = path.replace("./assets/music/", "");
-    return import.meta.env.DEV
-      ? `./src/assets/music/${slicedPath}`
-      : `./assets/${slicedPath}`;
-  },
-);
-console.log("TRACK_LIST", TRACK_LIST);
-console.log("TRACK_LIST3", TRACK_LIST3);
+// const this.trackList = Object.keys(import.meta.glob("@assets/music/*.mp3")).map(
+// const this.trackList = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+//   (path) => {
+//     const slicedPath = path.replace("./assets/music/", "");
+//     return import.meta.env.DEV
+//       ? `./src/assets/music/${slicedPath}`
+//       : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
+//   },
+// );
+// const this.trackList3 = Object.keys(import.meta.glob("./assets/music/*.mp3")).map(
+//   (path) => {
+//     const slicedPath = path.replace("./assets/music/", "");
+//     return import.meta.env.DEV
+//       ? `./src/assets/music/${slicedPath}`
+//       : `./assets/${slicedPath}`;
+//   },
+// );
+
+// const this.trackList3 = Object.keys(import.meta.glob("./assets/music/*.mp3"), {
+//   as: "url",
+//   eager: true,
+// });
+// console.log("this.trackList", this.trackList);
+// console.log("this.trackList3", this.trackList3);
 export default defineComponent({
   components: {
     MainInfoBand,
@@ -51,6 +57,7 @@ export default defineComponent({
   },
   data() {
     return {
+      trackList: [],
       currentTrackIndex: 0,
       totalNumbSongs: 0,
 
@@ -77,21 +84,38 @@ export default defineComponent({
       if (this.isRandomTracks) {
         return this.getRandomTracks();
       }
-      return TRACK_LIST;
+      return this.trackList;
     },
   },
-  created() {
-    this.pathToCurrentFile = TRACK_LIST[0];
-    this.totalNumbSongs = TRACK_LIST.length;
-    const TRACK_LIST2 = Object.keys(
-      import.meta.glob("./assets/music/*.mp3"),
-    ).map((path) => {
-      const slicedPath = path.replace("./assets/music/", "");
-      return import.meta.env.DEV
-        ? `./src/assets/music/${slicedPath}`
-        : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
-    });
-    console.log("TRACK_LIST2", TRACK_LIST2);
+  async created() {
+    const music = import.meta.glob("@assets/music/*.mp3");
+    console.log("music", music);
+    for (const path in music) {
+      // const imageName = path.replace(/^.*\/(.*)\.\w+$/, "$1"); // Получение имени файла без расширения
+      // console.log("imageName", imageName, path);
+      // this.trackList[imageName] = (await music[path]()).default; // Динамический импорт и сохранение пути к изображению в объекте
+      this.trackList.push((await music[path]()).default);
+      // console.log(this.music[imageName]);
+    }
+    console.log("this.trackList", this.trackList);
+    this.pathToCurrentFile = this.trackList[0];
+    this.totalNumbSongs = this.trackList.length;
+
+    // const music = import.meta.glob("@assets/music/*.mp3");
+    // console.log("music", music);
+    // for (const path in music) {
+    //   const imageName = path.replace(/^.*\/(.*)\.\w+$/, "$1"); // Получение имени файла без расширения
+    //   // console.log("imageName", imageName, path);
+    //   this.music[imageName] = (await music[path]()).default; // Динамический импорт и сохранение пути к изображению в объекте
+    //   console.log(this.music[imageName]);
+    // }
+    //   .map((path) => {
+    //   const slicedPath = path.replace("./assets/music/", "");
+    //   return import.meta.env.DEV
+    //     ? `./src/assets/music/${slicedPath}`
+    //     : `.${import.meta.env.BASE_URL}assets/${slicedPath}`;
+    // });
+    // console.log("this.trackList2", this.trackList2);
   },
   mounted() {
     audioPlayer.value = this.$refs.audioPlayer as CustomAudioElement;
@@ -111,10 +135,20 @@ export default defineComponent({
       this.currentTime = event.target.currentTime;
     },
     setVolume(value) {
-      // // :TODO: поправить
-      if ("volume" in audioPlayer.value) {
-        audioPlayer.value.volume = value / 100;
-      }
+      console.log(typeof audioPlayer); // Узнать тип переменной
+      console.dir(audioPlayer); // Вывести объект
+
+      // После использования
+      console.log(typeof audioPlayer?.value); // Узнать тип значения
+      console.dir(audioPlayer?.value); // Вывести значение объекта
+      // // :TODO: поправить!!!!!!
+      // if ("volume" in audioPlayer.value) {
+      console.log("setVolume", value);
+      // console.log(audioPlayer);
+      // console.dir(audioPlayer?.value);
+      // console.log(audioPlayer?.value?.volume);
+      audioPlayer.value.volume = value / 100;
+      // }
     },
     setTotalTime(event) {
       // console.log("setTotalTime", event, event.target, event.target?.duration);
@@ -140,20 +174,22 @@ export default defineComponent({
     nextTrack() {
       // console.log("nextTrack");
       this.currentTrackIndex += 1;
-      if (this.currentTrackIndex >= TRACK_LIST.length) {
+      if (this.currentTrackIndex >= this.trackList.length) {
         this.currentTrackIndex = 0;
       }
     },
     previousTrack() {
       // console.log("previousTrack");
       this.currentTrackIndex =
-        (this.currentTrackIndex - 1 + TRACK_LIST.length) % TRACK_LIST.length;
+        (this.currentTrackIndex - 1 + this.trackList.length) %
+        this.trackList.length;
     },
     handlerRandomBtn() {
       this.isRandomTracks = !this.isRandomTracks;
     },
     getRandomTracks() {
-      return TRACK_LIST.map((value) => ({ value, sort: Math.random() }))
+      return this.trackList
+        .map((value) => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
     },
